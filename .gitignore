@@ -1,0 +1,8 @@
+build/
+*.pyc
+*.so
+metis4py.py
+metis4py_wrap.cpp
+
+.*.swp
+*~
