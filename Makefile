@@ -16,4 +16,4 @@ main.o: main.c
 	gcc -g -c $< -I$(METIS_DIR)/include
 
 clean:
-	rm -rf build metis4py_wrap.cpp metis4py.py _metis4py.so main.o main
+	rm -rf build metis4py_wrap.cpp metis4py.py metis4py.pyc _metis4py.so main.o main

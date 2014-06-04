@@ -20,8 +20,38 @@
 %apply (int** ARGOUTVIEWM_ARRAY1, int* DIM1) {(int** element_parts, int* element_parts_size)}
 %apply (int** ARGOUTVIEWM_ARRAY1, int* DIM1) {(int** node_parts, int* node_parts_size)}
 
+%exception part_mesh_nodal {
+    try {
+        $action
+    } 
+    catch (int e)
+    {
+        switch (e) {
+            case METIS_ERROR_INPUT:
+                PyErr_SetString(PyExc_RuntimeError,"Metis returned METIS_ERROR_INPUT.");
+                return NULL;
+                break;
+
+            case METIS_ERROR_MEMORY:
+                PyErr_SetString(PyExc_RuntimeError,"Metis returned METIS_ERROR_MEMORY.");
+                return NULL;
+                break;
+
+            case METIS_ERROR:
+                PyErr_SetString(PyExc_RuntimeError,"Metis returned METIS_ERROR.");
+                return NULL;
+                break;
+
+            default:
+                PyErr_SetString(PyExc_RuntimeError,"Metis returned unknow error.");
+                return NULL;
+                break;
+        }
+    }
+}
+
 %inline %{
-int part_mesh_nodal(
+void part_mesh_nodal(
     int* element_idx, int element_idx_size,         // IN_ARRAY1
     int* elements, int elements_size,               // IN_ARRAY1
     int nparts,
@@ -29,6 +59,8 @@ int part_mesh_nodal(
     int** node_parts, int* node_parts_size          // ARGOUTVIEWM_ARRAY1
     )
 {
+    // TODO: return ncuts
+
     int *vwgt = NULL;
     int *vsize = NULL;
     real_t *tpwgts = NULL; 
@@ -59,8 +91,9 @@ int part_mesh_nodal(
     int err = METIS_PartMeshNodal(&ne, &nn, element_idx, elements, vwgt, vsize, 
             &nparts, tpwgts, options, &objval, *element_parts, *node_parts);
 
-    // TODO: manage exceptions
-    // TODO: return ncuts
-    return 0;
+    if (err != METIS_OK) {
+        throw err;
+    }
+
 }
 %}
