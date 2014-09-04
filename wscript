@@ -56,3 +56,7 @@ def build(bld):
         cxxflags = ['-g','-O0', ],
         lib = 'metis',
     )
+
+    python_site_package = '${PREFIX}/lib/python%s/site-packages' \
+        % bld.env['PYTHON_VERSION']
+    bld.install_files(python_site_package, 'metis4py.py')
