@@ -27,3 +27,6 @@ print_nodes(itri=ntri-1)
 
 nparts = 3
 element_part,node_part = part_mesh_nodal(triangle_idx, triangles,nparts)
+
+print element_part
+print node_part

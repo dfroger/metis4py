@@ -54,4 +54,5 @@ def build(bld):
         use  = 'metis4py',
         #cxxflags = ['-O3','-DNDEBUG'],
         cxxflags = ['-g','-O0', ],
+        lib = 'metis',
     )
