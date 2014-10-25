@@ -14,13 +14,17 @@
 
 %import "metis.h"
 
-%numpy_typemaps(long              , NPY_LONG     , long)
+#if IDXTYPEWIDTH == 32
+%numpy_typemaps(idx_t, NPY_INT, idx_t)
+#else
+%numpy_typemaps(idx_t, NPY_LONG, idx_t)
+#endif
 
-%apply (long int* IN_ARRAY1, long int DIM1) {(long int* element_idx, long int element_idx_size)}
-%apply (long int* IN_ARRAY1, long int DIM1) {(long int* elements, long int elements_size)}
+%apply (idx_t* IN_ARRAY1, idx_t DIM1) {(idx_t* element_idx, idx_t element_idx_size)}
+%apply (idx_t* IN_ARRAY1, idx_t DIM1) {(idx_t* elements, idx_t elements_size)}
 
-%apply (long int** ARGOUTVIEWM_ARRAY1, long int* DIM1) {(long int** element_parts, long int* element_parts_size)}
-%apply (long int** ARGOUTVIEWM_ARRAY1, long int* DIM1) {(long int** node_parts, long int* node_parts_size)}
+%apply (idx_t** ARGOUTVIEWM_ARRAY1, idx_t* DIM1) {(idx_t** element_parts, idx_t* element_parts_size)}
+%apply (idx_t** ARGOUTVIEWM_ARRAY1, idx_t* DIM1) {(idx_t** node_parts, idx_t* node_parts_size)}
 
 %exception part_mesh_nodal {
     try {
@@ -54,27 +58,27 @@
 
 %inline %{
 void part_mesh_nodal(
-    long int* element_idx, long int element_idx_size,         // IN_ARRAY1
-    long int* elements, long int elements_size,               // IN_ARRAY1
-    long int nparts,
-    long int** element_parts, long int* element_parts_size ,  // ARGOUTVIEWM_ARRAY1
-    long int** node_parts, long int* node_parts_size          // ARGOUTVIEWM_ARRAY1
+    idx_t* element_idx, idx_t element_idx_size,         // IN_ARRAY1
+    idx_t* elements, idx_t elements_size,               // IN_ARRAY1
+    idx_t nparts,
+    idx_t** element_parts, idx_t* element_parts_size ,  // ARGOUTVIEWM_ARRAY1
+    idx_t** node_parts, idx_t* node_parts_size          // ARGOUTVIEWM_ARRAY1
     )
 {
     // TODO: return ncuts
 
-    long int *vwgt = NULL;
-    long int *vsize = NULL;
+    idx_t *vwgt = NULL;
+    idx_t *vsize = NULL;
     real_t *tpwgts = NULL; 
-    long int *options = NULL;
-    long int objval;
+    idx_t *options = NULL;
+    idx_t objval;
 
     // number of elements;
-    long int ne = element_idx_size - 1;
+    idx_t ne = element_idx_size - 1;
 
     // number of nodes is the greatest element vertex index, plus one.
-    long int nn = elements[0];
-    long int ii;
+    idx_t nn = elements[0];
+    idx_t ii;
     for (ii = 0 ; ii < elements_size ; ii++) {
         if (elements[ii] > nn) {
             nn = elements[ii];
@@ -84,11 +88,11 @@ void part_mesh_nodal(
 
     // element_parts
     *element_parts_size = ne;
-    *element_parts = (long int*) malloc( (*element_parts_size)*sizeof(long int) );
+    *element_parts = (idx_t*) malloc( (*element_parts_size)*sizeof(idx_t) );
 
     // node_parts
     *node_parts_size = nn;
-    *node_parts = (long int*) malloc( (*node_parts_size)*sizeof(long int) );
+    *node_parts = (idx_t*) malloc( (*node_parts_size)*sizeof(idx_t) );
 
     int err = METIS_PartMeshNodal(&ne, &nn, element_idx, elements, vwgt, vsize, 
             &nparts, tpwgts, options, &objval, *element_parts, *node_parts);

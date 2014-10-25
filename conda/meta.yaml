@@ -12,7 +12,7 @@ build:
 requirements:
   build:
     - python
-    #- swig
+    - swig-python
     - metis
     - numpy
   run:
