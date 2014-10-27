@@ -1,11 +1,32 @@
 #!/usr/bin/env python
 from os.path import join
 from os.path import expanduser
+import platform
 
 from waflib.Configure import conf
 
 top = '.'
 out = 'build'
+
+idx_t_profiles = {
+    'linux-32': {'IDX_T': 'int', 'PY_IDX_T':'NPY_INT'},
+    'linux-64': {'IDX_T': 'long int', 'PY_IDX_T':'NPY_LONG'},
+}
+
+def get_idx_t_profile():
+    if platform.system() == 'Linux':
+        if platform.architecture()[0] == '32bit':
+            return 'linux-32'
+        elif platform.architecture()[0] == '64bit':
+            return 'linux-64'
+    raise OSError, "Architecture: %r %r not supported" % \
+        (platform.system(), platform.architecture())
+
+def get_idx_t_defines():
+    profile = get_idx_t_profile()
+    idx_t = idx_t_profiles[profile]
+    defines = ['-D%s=%s' % (name,value) for name, value in idx_t.iteritems()]
+    return ' '.join(defines)
 
 def options(opt):
     opt.load('compiler_cxx')
@@ -43,13 +64,15 @@ def configure(conf):
     conf.check(header_name='metis.h', features='c cprogram')
     conf.check_cc(lib='metis')
 
+    conf.env.SWIG_IDX_T_DEFINES = get_idx_t_defines()
+
 def build(bld):
 
     bld(
         features = 'cxx cxxshlib pyext',
         source = 'metis4py.i',
         target = '_metis4py',
-        swig_flags = '-c++ -python',
+        swig_flags = '-c++ -python ' + bld.env.SWIG_IDX_T_DEFINES,
         includes = '.',
         use  = 'metis4py',
         #cxxflags = ['-O3','-DNDEBUG'],

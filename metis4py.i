@@ -12,19 +12,13 @@
     import_array(); 
 %}
 
-%import "metis.h"
+%numpy_typemaps(IDX_T, PY_IDX_T, IDX_T)
 
-#if IDXTYPEWIDTH == 32
-%numpy_typemaps(idx_t, NPY_INT, idx_t)
-#else
-%numpy_typemaps(idx_t, NPY_LONG, idx_t)
-#endif
+%apply (IDX_T* IN_ARRAY1, IDX_T DIM1) {(IDX_T* element_idx, IDX_T element_idx_size)}
+%apply (IDX_T* IN_ARRAY1, IDX_T DIM1) {(IDX_T* elements, IDX_T elements_size)}
 
-%apply (idx_t* IN_ARRAY1, idx_t DIM1) {(idx_t* element_idx, idx_t element_idx_size)}
-%apply (idx_t* IN_ARRAY1, idx_t DIM1) {(idx_t* elements, idx_t elements_size)}
-
-%apply (idx_t** ARGOUTVIEWM_ARRAY1, idx_t* DIM1) {(idx_t** element_parts, idx_t* element_parts_size)}
-%apply (idx_t** ARGOUTVIEWM_ARRAY1, idx_t* DIM1) {(idx_t** node_parts, idx_t* node_parts_size)}
+%apply (IDX_T** ARGOUTVIEWM_ARRAY1, IDX_T* DIM1) {(IDX_T** element_parts, IDX_T* element_parts_size)}
+%apply (IDX_T** ARGOUTVIEWM_ARRAY1, IDX_T* DIM1) {(IDX_T** node_parts, IDX_T* node_parts_size)}
 
 %exception part_mesh_nodal {
     try {
@@ -56,6 +50,7 @@
     }
 }
 
+%define PART_MESH_NODAL(idx_t)
 %inline %{
 void part_mesh_nodal(
     idx_t* element_idx, idx_t element_idx_size,         // IN_ARRAY1
@@ -103,3 +98,6 @@ void part_mesh_nodal(
 
 }
 %}
+%enddef
+
+PART_MESH_NODAL(IDX_T)
