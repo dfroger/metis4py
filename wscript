@@ -10,7 +10,7 @@ out = 'build'
 
 idx_t_profiles = {
     'linux-32': {'IDX_T': 'int', 'PY_IDX_T':'NPY_INT'},
-    'linux-64': {'IDX_T': "'long int'", 'PY_IDX_T':'NPY_LONG'},
+    'linux-64': {'IDX_T': 'long', 'PY_IDX_T':'NPY_LONG'},
 }
 
 def get_idx_t_profile():
@@ -25,8 +25,7 @@ def get_idx_t_profile():
 def get_idx_t_defines():
     profile = get_idx_t_profile()
     idx_t = idx_t_profiles[profile]
-    defines = ['-D%s=%s' % (name,value) for name, value in idx_t.iteritems()]
-    return ' '.join(defines)
+    return ['-D%s=%s' % (name,value) for name, value in idx_t.iteritems()]
 
 def options(opt):
     opt.load('compiler_cxx')
@@ -72,7 +71,7 @@ def build(bld):
         features = 'cxx cxxshlib pyext',
         source = 'metis4py.i',
         target = '_metis4py',
-        swig_flags = '-c++ -python ' + bld.env.SWIG_IDX_T_DEFINES,
+        swig_flags = ['-c++', '-python'] + bld.env.SWIG_IDX_T_DEFINES,
         includes = '.',
         use  = 'metis4py',
         #cxxflags = ['-O3','-DNDEBUG'],
