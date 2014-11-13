@@ -6,7 +6,7 @@ source:
   git_url: https://github.com/dfroger/metis4py
 
 build:
-  number: 2
+  number: 3
   binary_relocation: true
 
 requirements:
