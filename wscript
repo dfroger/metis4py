@@ -9,8 +9,10 @@ top = '.'
 out = 'build'
 
 idx_t_profiles = {
-    'linux-32': {'IDX_T': 'int', 'PY_IDX_T':'NPY_INT'},
-    'linux-64': {'IDX_T': 'long', 'PY_IDX_T':'NPY_LONG'},
+    'linux-32': {'IDX_T': 'int32_t', 'PY_IDX_T':'NPY_INT'},
+    'linux-64': {'IDX_T': 'int64_t', 'PY_IDX_T':'NPY_LONG'},
+    'osx-32': {'IDX_T': 'int32_t', 'PY_IDX_T':'NPY_INT'},
+    'osx-64': {'IDX_T': 'int64_t', 'PY_IDX_T':'NPY_LONG'},
 }
 
 def get_idx_t_profile():
@@ -19,6 +21,11 @@ def get_idx_t_profile():
             return 'linux-32'
         elif platform.architecture()[0] == '64bit':
             return 'linux-64'
+    elif platform.system() == 'Darwin':
+        if platform.architecture()[0] == '32bit':
+            return 'osx-32'
+        elif platform.architecture()[0] == '64bit':
+            return 'osx-64'
     raise OSError, "Architecture: %r %r not supported" % \
         (platform.system(), platform.architecture())
 
