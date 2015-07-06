@@ -11,8 +11,8 @@ out = 'build'
 idx_t_profiles = {
     'linux-32': {'IDX_T': 'int32_t', 'PY_IDX_T':'NPY_INT'},
     'linux-64': {'IDX_T': 'int64_t', 'PY_IDX_T':'NPY_LONG'},
-    'osx-32': {'IDX_T': 'int32_t', 'PY_IDX_T':'NPY_INT'},
-    'osx-64': {'IDX_T': 'int64_t', 'PY_IDX_T':'NPY_LONG'},
+    'osx-32': {'IDX_T': 'int', 'PY_IDX_T':'NPY_INT'},
+    'osx-64': {'IDX_T': 'long long', 'PY_IDX_T':'NPY_LONG'},
 }
 
 def get_idx_t_profile():

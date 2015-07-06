@@ -1,4 +1,5 @@
 import unittest
+import platform
 
 import numpy as np
 
@@ -19,8 +20,12 @@ class TestMetis4py(unittest.TestCase):
 
         tripart,vtxpart = metis4py.part_mesh_nodal(triidx,trivtx,nparts)
 
-        self.assertEqual(tripart.tolist(), [2, 1, 1, 2, 1, 0, 2, 1, 1, 1, 0, 0])
-        self.assertEqual(vtxpart.tolist(), [2, 2, 1, 1, 2, 1, 1, 0, 2, 0, 0, 0])
+        if platform.system() == 'Darwin':
+            self.assertEqual(tripart.tolist(), [0, 2, 2, 0, 2, 1, 0, 2, 2, 2, 1, 1])
+            self.assertEqual(vtxpart.tolist(), [0, 0, 2, 2, 0, 2, 2, 1, 0, 1, 1, 1])
+        else:
+            self.assertEqual(tripart.tolist(), [2, 1, 1, 2, 1, 0, 2, 1, 1, 1, 0, 0])
+            self.assertEqual(vtxpart.tolist(), [2, 2, 1, 1, 2, 1, 1, 0, 2, 0, 0, 0])
 
 if __name__ == '__main__':
     unittest.main()
