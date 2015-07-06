@@ -4,7 +4,7 @@ package:
 
 source:
   fn: metis4py-5.1.0.0.tar.gz
-  url: https://github.com/dfroger/dfroger/archive/5.1.0.0.tar.gz
+  url: https://github.com/dfroger/metis4py/archive/5.1.0.0.tar.gz
 
 build:
   number: 0
