@@ -1,0 +1,3 @@
+5.1.0.1
+  - Build against metis-gkrand, which use GKlib pseudo-random
+    numbers, which are consistent on different OS
