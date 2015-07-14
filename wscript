@@ -81,8 +81,7 @@ def build(bld):
         swig_flags = ['-c++', '-python'] + bld.env.SWIG_IDX_T_DEFINES,
         includes = '.',
         use  = 'metis4py',
-        #cxxflags = ['-O3','-DNDEBUG'],
-        cxxflags = ['-g','-O0', ],
+        cxxflags = ['-O3','-DNDEBUG'],
         lib = 'metis',
     )
 
