@@ -14,11 +14,21 @@
 
 %numpy_typemaps(IDX_T, PY_IDX_T, IDX_T)
 
-%apply (IDX_T* IN_ARRAY1, IDX_T DIM1) {(IDX_T* element_idx, IDX_T element_idx_size)}
-%apply (IDX_T* IN_ARRAY1, IDX_T DIM1) {(IDX_T* elements, IDX_T elements_size)}
+%apply
+    (IDX_T* IN_ARRAY1, IDX_T DIM1)
+    {(IDX_T* element_idx, IDX_T element_idx_size)}
 
-%apply (IDX_T** ARGOUTVIEWM_ARRAY1, IDX_T* DIM1) {(IDX_T** element_parts, IDX_T* element_parts_size)}
-%apply (IDX_T** ARGOUTVIEWM_ARRAY1, IDX_T* DIM1) {(IDX_T** node_parts, IDX_T* node_parts_size)}
+%apply
+    (IDX_T* IN_ARRAY1, IDX_T DIM1)
+    {(IDX_T* elements, IDX_T elements_size)}
+
+%apply
+    (IDX_T** ARGOUTVIEWM_ARRAY1, IDX_T* DIM1)
+    {(IDX_T** element_parts, IDX_T* element_parts_size)}
+
+%apply
+    (IDX_T** ARGOUTVIEWM_ARRAY1, IDX_T* DIM1)
+    {(IDX_T** node_parts, IDX_T* node_parts_size)}
 
 %exception part_mesh_nodal {
     try {
@@ -55,7 +65,7 @@
 void part_mesh_nodal(
     idx_t* element_idx, idx_t element_idx_size,         // IN_ARRAY1
     idx_t* elements, idx_t elements_size,               // IN_ARRAY1
-    idx_t nparts,
+    int nparts,
     idx_t** element_parts, idx_t* element_parts_size ,  // ARGOUTVIEWM_ARRAY1
     idx_t** node_parts, idx_t* node_parts_size          // ARGOUTVIEWM_ARRAY1
     )
@@ -89,13 +99,16 @@ void part_mesh_nodal(
     *node_parts_size = nn;
     *node_parts = (idx_t*) malloc( (*node_parts_size)*sizeof(idx_t) );
 
-    int err = METIS_PartMeshNodal(&ne, &nn, element_idx, elements, vwgt, vsize, 
-            &nparts, tpwgts, options, &objval, *element_parts, *node_parts);
+    // number of partitions
+    idx_t nparts_idx_t = (idx_t) nparts;
+
+    int err = METIS_PartMeshNodal(&ne, &nn, element_idx, elements, vwgt,
+                                  vsize, &nparts_idx_t, tpwgts, options, &objval,
+                                  *element_parts, *node_parts);
 
     if (err != METIS_OK) {
         throw err;
     }
-
 }
 %}
 %enddef
