@@ -1,6 +1,6 @@
 package:
   name: metis4py
-  version: 5.1.0.1
+  version: 5.1.0.2
 
 source:
   fn: metis4py-5.1.0.2.tar.gz
