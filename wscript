@@ -8,32 +8,6 @@ from waflib.Configure import conf
 top = '.'
 out = 'build'
 
-idx_t_profiles = {
-    'linux-32': {'IDX_T': 'int32_t', 'PY_IDX_T':'NPY_INT32'},
-    'linux-64': {'IDX_T': 'int64_t', 'PY_IDX_T':'NPY_INT64'},
-    'osx-32': {'IDX_T': 'int32_t', 'PY_IDX_T':'NPY_INT32'},
-    'osx-64': {'IDX_T': 'int64_t', 'PY_IDX_T':'NPY_INT64'},
-}
-
-def get_idx_t_profile():
-    if platform.system() == 'Linux':
-        if platform.architecture()[0] == '32bit':
-            return 'linux-32'
-        elif platform.architecture()[0] == '64bit':
-            return 'linux-64'
-    elif platform.system() == 'Darwin':
-        if platform.architecture()[0] == '32bit':
-            return 'osx-32'
-        elif platform.architecture()[0] == '64bit':
-            return 'osx-64'
-    raise OSError, "Architecture: %r %r not supported" % \
-        (platform.system(), platform.architecture())
-
-def get_idx_t_defines():
-    profile = get_idx_t_profile()
-    idx_t = idx_t_profiles[profile]
-    return ['-D%s=%s' % (name,value) for name, value in idx_t.iteritems()]
-
 def options(opt):
     opt.load('compiler_cxx')
 
@@ -70,7 +44,7 @@ def configure(conf):
     conf.check(header_name='metis.h', features='c cprogram')
     conf.check_cc(lib='metis')
 
-    conf.env.SWIG_IDX_T_DEFINES = get_idx_t_defines()
+    conf.env.SWIG_IDX_T_DEFINES = ['-DIDX_T=int32_t', '-DPY_IDX_T=NPY_INT32']
 
 def build(bld):
 

@@ -3,8 +3,8 @@ package:
   version: 5.1.0.1
 
 source:
-  fn: metis4py-5.1.0.1.tar.gz
-  url: https://github.com/dfroger/metis4py/archive/5.1.0.1.tar.gz
+  fn: metis4py-5.1.0.2.tar.gz
+  url: https://github.com/dfroger/metis4py/archive/5.1.0.2.tar.gz
 
 build:
   number: 0
@@ -12,13 +12,13 @@ build:
 
 requirements:
   build:
-    - python 2.7*
+    - python
     - swig
-    - metis-gkrand
+    - metis
     - numpy
   run:
-    - python 2.7*
-    - metis-gkrand
+    - python
+    - metis
     - numpy
 
 test:
@@ -30,3 +30,4 @@ test:
 about:
   home: https://github.com/dfroger/metis4py
   license: GPL3
+  summary: Python bindings for metis
