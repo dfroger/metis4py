@@ -1,9 +1,6 @@
-Note: idx_t is long int in metis4py.i, so metis must be have compile
-with idx_t being long int (this is the case with
-https://binstar.org/dfroger/metis)
+Note: idx_t is 32 bits in metis4py.i, so metis must be have compile with idx_t
+being 32 bits (this is the case with https://anaconda.org/inria-pro-sed/metis)
 
 CONDA_DIR=/mnt/data/miniconda
 waf configure --metis-inc=$CONDA_DIR/include/ \
-              --metis-lib=$CONDA_DIR/lib/ \
-              --numpy-inc=$CONDA_DIR/lib/python2.7/site-packages/numpy/core/include \
-              --python-inc=$CONDA_DIR/include/python2.7
+              --metis-lib=$CONDA_DIR/lib/
